@@ -20,6 +20,8 @@ def main():
     operation_code = 0
     operand = 0
 
+    big_storage = [0] * 100
+
     window = tk.Tk()
     window.title("UVsim")
     window.geometry("1000x600")
@@ -31,6 +33,7 @@ def main():
         operation_code,
         operand,
         accumulator,
+        big_storage
     )
 
     window.mainloop()
@@ -38,3 +41,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
