@@ -165,15 +165,16 @@ class Controller:
                     )  # Formats input to be the same as memory format
                     self.memory[memory_location] = user_input
                     valid = True
-        return
+        return user_input
 
     def write(self, memory_location):
         """Prints the contents of the given memory location to the screen"""
         if (self.memory[memory_location] == "+9999" or self.memory[memory_location] == "-9999"):
             self.output.append(self.big_storage[memory_location])
+            return self.big_storage[memory_location]
         else:
             self.output.append(self.memory[memory_location])
-        return
+            return self.memory[memory_location]
 
     def load(self, memory_location):
         """ Will take a memory location and load what ever is there into the accumulator  """
