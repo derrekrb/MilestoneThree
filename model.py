@@ -6,7 +6,7 @@ from tkinter import messagebox
 
 class Memory:
     def __init__(self, memory):
-        """Constructer call to initialize attributes of the memory class"""
+        """Constructor call to initialize attributes of the memory class"""
         self.memory = memory
 
     def checkMemory(self, memory):
@@ -33,7 +33,7 @@ class Memory:
         return check
 
     def clean_memory(self, memory):
-        """Clears all memory locations that have be alocated a word"""
+        """Clears all memory locations that have be allocated a word"""
         index = 0
         while index < len(memory):
             number = memory[index]
