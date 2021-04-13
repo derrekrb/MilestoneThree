@@ -1,10 +1,12 @@
 import tkinter as tk
+from tkinter import filedialog
 from model import Memory
 from controller import Controller
 
 
 class View:
     """The View class presents all the data to the user"""
+
     def __init__(
         self,
         master,
@@ -55,19 +57,34 @@ class View:
         vsb.grid(row=0, column=1, sticky="ns")
         canvas.configure(yscrollcommand=vsb.set)
 
+        button_explore = tk.Button(
+            self.mainFrame, text="Browse Files", command=self.browseFiles
+        )
+        button_explore.grid(row=0, column=0)
+
         # Create frame for input and initialize input boxes
         frame_input = tk.Frame(canvas)
+        frame_input.grid(row=1, column=0)
         canvas.create_window((0, 0), window=frame_input, anchor="nw")
-        self.entry_list = []
-        for line in range(len(self.memory)):
-            lineNum = tk.Label(frame_input, text=str(line).zfill(2) + "   ")
-            lineEntry = tk.Entry(frame_input)
-            self.entry_list.append(lineEntry)
-            lineNum.grid(column=1, row=line, sticky="news")
-            lineEntry.grid(column=2, row=line, sticky="news")
+        self.text_input = tk.Text(frame_input, height=400, width=200)
+        self.text_input.grid(row=0, column=0)
+
         frame_input.update_idletasks()
         frame_canvas.config(width=200, height=400, padx=10, pady=10)
         canvas.config(scrollregion=canvas.bbox("all"))
+
+        # frame_input = tk.Frame(canvas)
+        # canvas.create_window((0, 0), window=frame_input, anchor="nw")
+        # self.entry_list = []
+        # for line in range(len(self.memory)):
+        #     lineNum = tk.Label(frame_input, text=str(line).zfill(2) + "   ")
+        #     lineEntry = tk.Entry(frame_input)
+        #     self.entry_list.append(lineEntry)
+        #     lineNum.grid(column=1, row=line, sticky="news")
+        #     lineEntry.grid(column=2, row=line, sticky="news")
+        # frame_input.update_idletasks()
+        # frame_canvas.config(width=200, height=400, padx=10, pady=10)
+        # canvas.config(scrollregion=canvas.bbox("all"))
 
         # Initialize memory frame
         self.memory_frame = tk.Frame(self.mainFrame)
@@ -146,8 +163,10 @@ class View:
 
         # Checks if inputs are valid words in BASIC ml
         new_memory = ["+0000"] * 100
-        for i in range(100):
-            mem_input = self.entry_list[i].get()
+        entry_list = self.text_input.get("1.0", "end").split("\n")
+        entry_list.pop()
+        for i in range(len(entry_list)):
+            mem_input = entry_list[i]
             if mem_input != "":
                 new_memory[i] = mem_input
 
@@ -199,6 +218,25 @@ class View:
 
         # Prints the output array to the output field
         self.updateWindow(C.output)
+
+    def browseFiles(self):
+        filename = filedialog.askopenfilename(
+            initialdir="/",
+            title="Select a File",
+            filetypes=(("Text files", "*.txt*"), ("all files", "*.*")),
+        )
+
+        # Clear contents of text for new content
+        self.text_input.delete("1.0", "end")
+        
+        # Change label contents
+        with open(filename) as f:
+            # self.text_input.configure(f.readlines())
+            input_file = f.read()
+
+            self.text_input.insert("1.0", input_file)
+
+        # self.text_input.configure(text="File Opened: " + filename)
 
     def updateWindow(self, lyst):
         """Takes the array of outputs from the controller class and
