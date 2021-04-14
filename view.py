@@ -20,7 +20,7 @@ class View:
     ):
         # Initialize variables from main
         # and initialize main window
-        self.mainFrame = tk.Frame(master)
+        self.main_frame = tk.Frame(master)
         self.memory = memory
         self.instruction_counter = instruction_counter
         self.instruction_register = instruction_register
@@ -28,6 +28,7 @@ class View:
         self.operand = operand
         self.accumulator = accumulator
         self.big_storage = big_storage
+
         # Initialize Memory Class from model
         self.M = Memory(self.memory)
 
@@ -36,17 +37,17 @@ class View:
     def createWindow(self):
         """Creates the GUI for UVSim"""
         # Begin creating widgets
-        self.mainFrame.grid(sticky="news", pady=50, padx=50)
+        self.main_frame.grid(sticky="news", pady=50, padx=50)
 
         # Displays the greeting to the UVsim
         greeting = tk.Label(
-            self.mainFrame,
+            self.main_frame,
             text="---- Instructions given in the UVsim must be in the format of +0000.  Ex. +1001 is a valid instruction ----",
         )
         greeting.grid(row=0, column=1, pady=10, padx=10)
 
         # Begin creating input box and scroll bar
-        frame_canvas = tk.Frame(self.mainFrame)
+        frame_canvas = tk.Frame(self.main_frame)
         frame_canvas.grid(row=1, column=0, pady=(5, 0), sticky="nw")
         frame_canvas.grid_rowconfigure(0, weight=1)
         frame_canvas.grid_columnconfigure(0, weight=1)
@@ -57,10 +58,16 @@ class View:
         vsb.grid(row=0, column=1, sticky="ns")
         canvas.configure(yscrollcommand=vsb.set)
 
+        # Create frame for export and import buttons
+        button_frame = tk.Frame(self.main_frame)
+        button_frame.grid(row=0, column=0)
+
         button_explore = tk.Button(
-            self.mainFrame, text="Browse Files", command=self.browseFiles
+            button_frame, text="Import File", command=self.browseFiles
         )
-        button_explore.grid(row=0, column=0)
+        button_explore.grid(row=0, column=0, padx=5)
+        button_save = tk.Button(button_frame, text="Export File", command=self.saveFile)
+        button_save.grid(row=0, column=1, padx=5)
 
         # Create frame for input and initialize input boxes
         frame_input = tk.Frame(canvas)
@@ -73,21 +80,8 @@ class View:
         frame_canvas.config(width=200, height=400, padx=10, pady=10)
         canvas.config(scrollregion=canvas.bbox("all"))
 
-        # frame_input = tk.Frame(canvas)
-        # canvas.create_window((0, 0), window=frame_input, anchor="nw")
-        # self.entry_list = []
-        # for line in range(len(self.memory)):
-        #     lineNum = tk.Label(frame_input, text=str(line).zfill(2) + "   ")
-        #     lineEntry = tk.Entry(frame_input)
-        #     self.entry_list.append(lineEntry)
-        #     lineNum.grid(column=1, row=line, sticky="news")
-        #     lineEntry.grid(column=2, row=line, sticky="news")
-        # frame_input.update_idletasks()
-        # frame_canvas.config(width=200, height=400, padx=10, pady=10)
-        # canvas.config(scrollregion=canvas.bbox("all"))
-
         # Initialize memory frame
-        self.memory_frame = tk.Frame(self.mainFrame)
+        self.memory_frame = tk.Frame(self.main_frame)
 
         # Load memory into frame
         memory_location = 0
@@ -103,22 +97,22 @@ class View:
         self.memory_frame.grid(column=1, row=1)
 
         # Create the Load Memory Button
-        self.load_memory_btn = tk.Button(self.mainFrame, text="Load Memory")
+        self.load_memory_btn = tk.Button(self.main_frame, text="Load Memory")
         self.load_memory_btn.grid(row=2, columnspan=1, pady=10)
 
         # Create the Run Program Button
-        self.run_program_btn = tk.Button(self.mainFrame, text="Run Program")
+        self.run_program_btn = tk.Button(self.main_frame, text="Run Program")
         self.run_program_btn.grid(row=3, columnspan=1, pady=5)
 
         # Initialize Output Frame
-        output_frame = tk.Frame(self.mainFrame)
+        output_frame = tk.Frame(self.main_frame)
         tk.Label(output_frame, text="OUTPUT").grid(row=0, column=0)
         self.prog_output = tk.Label(output_frame, text="")
         self.prog_output.grid(row=1, column=0)
         output_frame.grid(row=2, column=1, rowspan=2)
 
         # Initialize all Register Frames
-        register_frame = tk.Frame(self.mainFrame)
+        register_frame = tk.Frame(self.main_frame)
 
         ir_frame = tk.Frame(register_frame)
         tk.Label(ir_frame, text="Instruction Register").grid(row=0)
@@ -178,7 +172,7 @@ class View:
 
             # Creates new memory frame with new memory values
             self.memory_frame.destroy()
-            self.memory_frame = tk.Frame(self.mainFrame)
+            self.memory_frame = tk.Frame(self.main_frame)
             memory_location = 0
             self.retreive_mem_contents = []
             for i in range(10):
@@ -220,23 +214,37 @@ class View:
         self.updateWindow(C.output)
 
     def browseFiles(self):
-        filename = filedialog.askopenfilename(
-            initialdir="/",
-            title="Select a File",
+        """ Allows user to browse files and select .txt file"""
+
+        MsgBox = tk.messagebox.askquestion(
+            "Clear Input",
+            "Opening a new file will delete the current written contents:\nAre you sure you want to continue?",
+        )
+        if MsgBox == "yes":
+            # Clear contents of text for new content
+            self.text_input.delete("1.0", "end")
+
+            # Opens file explorer to select file
+            filename = filedialog.askopenfilename(
+                initialdir="/",
+                title="Select a File",
+                filetypes=(("Text files", "*.txt*"), ("all files", "*.*")),
+            )
+
+            # Reads the file and writes the content to the text entry frame
+            with open(filename, "r") as f:
+                input_file = f.read()
+                self.text_input.insert("1.0", input_file)
+
+    def saveFile(self):
+        """ Saves the contents of the input text area to a .txt file"""
+
+        export = filedialog.asksaveasfilename(
+            defaultextension=".txt",
             filetypes=(("Text files", "*.txt*"), ("all files", "*.*")),
         )
-
-        # Clear contents of text for new content
-        self.text_input.delete("1.0", "end")
-        
-        # Change label contents
-        with open(filename) as f:
-            # self.text_input.configure(f.readlines())
-            input_file = f.read()
-
-            self.text_input.insert("1.0", input_file)
-
-        # self.text_input.configure(text="File Opened: " + filename)
+        with open(export, "w") as f:
+            f.write(self.text_input.get("1.0", "end"))
 
     def updateWindow(self, lyst):
         """Takes the array of outputs from the controller class and
@@ -252,7 +260,7 @@ class View:
 
         # Updates memory frame with new values after run program is pressed
         self.memory_frame.destroy()
-        self.memory_frame = tk.Frame(self.mainFrame)
+        self.memory_frame = tk.Frame(self.main_frame)
         memory_location = 0
         self.retreive_mem_contents = []
         for i in range(10):
