@@ -6,6 +6,7 @@ from tkinter import messagebox
 
 class Controller:
     """accepts user’s inputs and delegates data representation to a View and data handling to a Model."""
+
     def __init__(
         self,
         memory,
@@ -15,7 +16,7 @@ class Controller:
         operand,
         accumulator,
     ):
-        """Constructer call to initialize attributes of the Controller class"""
+        """Constructor call to initialize attributes of the Controller class"""
         self.memory = memory
         self.instruction_counter = instruction_counter
         self.instruction_register = instruction_register
@@ -122,7 +123,8 @@ class Controller:
         valid = False
         while not valid:
             user_input = simpledialog.askstring(
-                "Input", "Enter an integer between -9999 and +9999"
+                "Input",
+                "Enter an integer between -9999 and +9999\n(Format must be +0000)",
             )
             try:
                 user_input = int(user_input)
@@ -152,7 +154,6 @@ class Controller:
     def write(self, memory_location):
         """Prints the contents of the given memory location to the screen"""
 
-  
         self.output.append(self.memory[memory_location])
 
         return
@@ -260,6 +261,3 @@ class Controller:
             self.instruction_register = self.memory[index]
             self.operation_code = op
             self.operand = memory_location
-     
-
-
