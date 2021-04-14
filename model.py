@@ -40,5 +40,4 @@ class Memory:
             memory[index] = str(number)
             index += 1
         return memory
-
-
+        

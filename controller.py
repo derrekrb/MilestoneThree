@@ -15,6 +15,7 @@ class Controller:
         operation_code,
         operand,
         accumulator,
+        big_storage
     ):
         """Constructor call to initialize attributes of the Controller class"""
         self.memory = memory
@@ -23,6 +24,7 @@ class Controller:
         self.operation_code = operation_code
         self.operand = operand
         self.accumulator = accumulator
+        self.big_storage = big_storage
 
         self.output = []
 
@@ -32,42 +34,50 @@ class Controller:
     def add(self, memory_location):
         """Adds a number from a specific location in memory to the number in the accumulator."""
         memory_value = int(self.memory[memory_location])
+        
+        if (memory_value == 9999 or memory_value == -9999):
+            memory_value = self.big_storage[memory_location]
+
         self.accumulator += memory_value
         self.accumulator = int(self.accumulator)
-        if self.accumulator > 9999 or self.accumulator < -9999:
-            if self.accumulator > 9999:
+        if self.accumulator > 999999 or self.accumulator < -999999:
+            if self.accumulator > 999999:
                 messagebox.showinfo(
                     "!",
-                    "Accumulator exceed max value of 9999. 9999 is loaded into the accumulator",
+                    "Accumulator exceed max value of 999999. 999999 is loaded into the accumulator",
                 )
-                self.accumulator = 9999
+                self.accumulator = 999999
             else:
                 messagebox.showinfo(
                     "!",
-                    "Accumulator exceed min value of -9999. -9999 is loaded into the accumulator",
+                    "Accumulator exceed min value of -999999. -999999 is loaded into the accumulator",
                 )
-                self.accumulator = -9999
+                self.accumulator = -999999
 
         return int(self.accumulator)
 
     def subtract(self, memory_location):
         """Subtracts a number from a specific location in memory from the number in the accumulator."""
         memory_value = int(self.memory[memory_location])
+        
+        if (memory_value == 9999 or memory_value == -9999):
+            memory_value = self.big_storage[memory_location]
+        
         self.accumulator -= memory_value
         self.accumulator = int(self.accumulator)
-        if self.accumulator > 9999 or self.accumulator < -9999:
-            if self.accumulator > 9999:
+        if self.accumulator > 999999 or self.accumulator < -999999:
+            if self.accumulator > 999999:
                 messagebox.showinfo(
                     "!",
-                    "Accumulator exceed max value of 9999. 9999 is loaded into the accumulator",
+                    "Accumulator exceed max value of 999999. 999999 is loaded into the accumulator",
                 )
-                self.accumulator = 9999
+                self.accumulator = 999999
             else:
                 messagebox.showinfo(
                     "!",
-                    "Accumulator exceed min value of -9999. -9999 is loaded into the accumulator",
+                    "Accumulator exceed min value of -999999. -999999 is loaded into the accumulator",
                 )
-                self.accumulator = -9999
+                self.accumulator = -999999
 
         return int(self.accumulator)
 
@@ -76,21 +86,25 @@ class Controller:
         and returns the accumulator"""
 
         memory_value = int(self.memory[memory_location])
+        
+        if (memory_value == 9999 or memory_value == -9999):
+            memory_value = self.big_storage[memory_location]
+        
         self.accumulator *= memory_value
         self.accumulator = int(self.accumulator)
-        if self.accumulator > 9999 or self.accumulator < -9999:
-            if self.accumulator > 9999:
+        if self.accumulator > 999999 or self.accumulator < -999999:
+            if self.accumulator > 999999:
                 messagebox.showinfo(
                     "!",
-                    "Accumulator exceed max value of 9999. 9999 is loaded into the accumulator",
+                    "Accumulator exceed max value of 999999. 999999 is loaded into the accumulator",
                 )
-                self.accumulator = 9999
+                self.accumulator = 999999
             else:
                 messagebox.showinfo(
                     "!",
                     "Accumulator exceed min value of -9999. -9999 is loaded into the accumulator",
                 )
-                self.accumulator = -9999
+                self.accumulator = -999999
 
         return int(self.accumulator)
 
@@ -99,21 +113,25 @@ class Controller:
         and returns the accumulator."""
 
         memory_value = int(self.memory[memory_location])
+        
+        if (memory_value == 9999 or memory_value == -9999):
+            memory_value = self.big_storage[memory_location]
+        
         self.accumulator /= memory_value
         self.accumulator = int(self.accumulator)
-        if self.accumulator > 9999 or self.accumulator < -9999:
-            if self.accumulator > 9999:
+        if self.accumulator > 999999 or self.accumulator < -999999:
+            if self.accumulator > 999999:
                 messagebox.showinfo(
                     "!",
-                    "Accumulator exceed max value of 9999. 9999 is loaded into the accumulator",
+                    "Accumulator exceed max value of 999999. 999999 is loaded into the accumulator",
                 )
-                self.accumulator = 9999
+                self.accumulator = 999999
             else:
                 messagebox.showinfo(
                     "!",
                     "Accumulator exceed min value of -9999. -9999 is loaded into the accumulator",
                 )
-                self.accumulator = -9999
+                self.accumulator = -999999
 
         return int(self.accumulator)
 
@@ -149,25 +167,37 @@ class Controller:
                     )  # Formats input to be the same as memory format
                     self.memory[memory_location] = user_input
                     valid = True
-        return
+        return user_input
 
     def write(self, memory_location):
         """Prints the contents of the given memory location to the screen"""
 
-        self.output.append(self.memory[memory_location])
+        if (self.memory[memory_location] == "+9999" or self.memory[memory_location] == "-9999"):
+            self.output.append(self.big_storage[memory_location])
+            return self.big_storage[memory_location]
+        else:
+            self.output.append(self.memory[memory_location])
+            return self.memory[memory_location]
 
-        return
 
     def load(self, memory_location):
         """ Will take a memory location and load what ever is there into the accumulator  """
-
-        self.accumulator = int(self.memory[memory_location])
+        if (self.memory[memory_location] == "+9999" or self.memory[memory_location] == "-9999"):
+            self.accumulator = self.big_storage[memory_location]
+        else:
+            self.accumulator = int(self.memory[memory_location])
         return
 
     def store(self, memory_location):
         """ Will take whatever is in the accumulator and will store it in the given location """
-
-        self.memory[memory_location] = self.accumulator
+        if self.accumulator > 9999:
+            self.big_storage[memory_location] = self.accumulator
+            self.memory[memory_location] = "+9999"
+        elif self.accumulator < -9999:
+            self.big_storage[memory_location] = self.accumulator
+            self.memory[memory_location] = "-9999"
+        else:
+            self.memory[memory_location] = self.accumulator
         return
 
     def branch_neg(self):
@@ -261,3 +291,4 @@ class Controller:
             self.instruction_register = self.memory[index]
             self.operation_code = op
             self.operand = memory_location
+

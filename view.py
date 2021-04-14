@@ -16,6 +16,7 @@ class View:
         operation_code,
         operand,
         accumulator,
+        big_storage
     ):
         # Initialize variables from main
         # and initialize main window
@@ -26,6 +27,7 @@ class View:
         self.operation_code = operation_code
         self.operand = operand
         self.accumulator = accumulator
+        self.big_storage = big_storage
 
         # Initialize Memory Class from model
         self.M = Memory(self.memory)
@@ -193,6 +195,7 @@ class View:
             self.operation_code,
             self.operand,
             self.accumulator,
+            self.big_storage
         )
 
         # Return an array of updated values from the Controller
@@ -205,6 +208,7 @@ class View:
         self.operation_code = C.operation_code
         self.operand = C.operand
         self.accumulator = C.accumulator
+        self.big_storage = C.big_storage
 
         # Prints the output array to the output field
         self.updateWindow(C.output)
@@ -268,3 +272,4 @@ class View:
                 self.retreive_mem_contents.append(mem_content)
                 memory_location += 1
         self.memory_frame.grid(column=1, row=1)
+        
