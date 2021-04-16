@@ -1,6 +1,20 @@
+"""
+This program will run the unit test for the Controller class.
+It will test each method to check if everything is working properly.
+
+There are 4 steps to run this unit test.
+1. Run the Program
+2. Enter the following string into the pop up window : +0005
+3. Hit the OK button
+4. Look at the console to see how many tests failed and passed.
+"""
+
 import unittest
 from unittest import mock
 from controller import Controller
+import tkinter
+from tkinter import simpledialog
+root = tkinter.Tk()
 
 class testController(unittest.TestCase):
     
@@ -51,13 +65,12 @@ class testController(unittest.TestCase):
         con.accumulator = 100000
         self.assertEqual(con.divide(10), 10)
         
-    @mock.patch('controller.input', create=True)
-    def test_read(self,mocked_input):
+    def test_read(self):
         memory = [0000] * 100
         big_storage = [0000] * 100
         memory[10] = 2
         con = Controller(memory,0,0,0,0,0,big_storage)
-        self.assertEqual(con.read(5), 5)
+        self.assertEqual(con.read(5), '+0005')
     
     def test_write(self):
         memory = [0000] * 100
