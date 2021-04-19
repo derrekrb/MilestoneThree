@@ -33,7 +33,7 @@ def main():
         operation_code,
         operand,
         accumulator,
-        big_storage
+        big_storage,
     )
 
     window.mainloop()
@@ -41,4 +41,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
