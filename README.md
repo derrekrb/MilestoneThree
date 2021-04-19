@@ -1,5 +1,7 @@
 M-2 CS 2450 By William Martell, Matthew Palmer, Tanner Erekson, and Derrek Buttars.
 
+To launch the program, run the main.py file.
+
 Overview: -The UVSim is a Graphical User Interface software simulator created by us over at IED (Innovative EDucation). Universities typically have a course where computer science students learn to work with registers and very low level coding, so this simulator allows for a simple and effective machine language environment. UVSIM works with a language called BasicML, which consists of instructions written in a signed four-digit decimal number, such as +1050, -5768, etc. UVSim has a 100-word memory, which are referenced by the last two digits of whatever command is entered. The BasicML program must be loaded into main memory starting at location 00 before running the program. The UVSim contains a CPU, register, and main memory. There is also an accumulator, which is what we will use to do different arithmetic or move around numbers in various ways. Each instruction (signed four-digit decimal number) occupies one word of the 100 word UVSim memory. Each slot may contain one of these instructions, or a data value that is placed inside one of the memory slots to be worked with.
 
 The first two digits of each instruction are the operation code specifying the operation to be performed, which will be explained in the Features section.
